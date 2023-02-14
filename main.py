@@ -26,6 +26,7 @@ class LinkedList:
             current = current.next
 
     def print_recursive(self, node):
+        '''Recursive print that traverses nested linked lists'''
         if node is not None:
             while node:
                 print(node.value)
@@ -35,6 +36,26 @@ class LinkedList:
                 node = node.next
         else:
             return
+
+    def print_cycle(self):
+        '''Print cycle and identify the meeting node'''
+        vals = []
+        found = False
+        if self.count >= 1:
+            current = self.head
+            while current:
+                if current.value not in vals:
+                    print(current.value)
+                    vals.append(current.value)
+                else:
+                    print(f'Cycle detected at {current.value}')
+                    found = True
+                    break
+                current = current.next
+            if not found:
+                print('Cycle not found')
+        else:
+            print('The list was empty')
 
     def insert_back(self, data):
         '''Inserts elements at the end of the linked list'''
@@ -293,6 +314,43 @@ class LinkedList:
         else:
             return 'The list is empty'
 
+    def cycle(self, value):
+        '''Creates a cycle by linking the last item in the list to a node within the list (excluding the last node)'''
+        if self.count >= 1:
+            current = self.head
+            while current:
+                if current.next is not None:  # If we are not at the end of the list then we can create a cycle
+                    if current.value == value:
+                        self.tail.next = current
+                        self.tail = None
+                        break
+                current = current.next
+
+    def floyd_algorithm(self):
+        '''Implementation of floyd algorithm. Hare pointer moves ahead and it's in charge of detecting the cycle'''
+        if self.count > 1:
+            turtle = hare = self.head
+            while hare:
+                turtle = turtle.next
+                hare = hare.next.next
+                if hare.next.next is None:
+                    print('No cycle found')
+                    return
+                elif turtle == hare:
+                    start = self.head
+                    while start != hare:
+                        start = start.next
+                        hare = hare.next
+                    print(f'Cycle found at {start.value}')
+                    return
+
+        if self.count == 1:
+            print('Cycle found')
+            return
+        else:
+            print('The linked list is empty')
+            return
+
 
 __name__ = "__main__"
 
@@ -304,25 +362,9 @@ list.insert_back(3)
 list.insert_back(4)
 list.insert_back(5)
 list.insert_back(6)
-
-sub1 = LinkedList()
-sub1.insert_back(7)
-sub1.insert_back(8)
-sub1.insert_back(9)
-
-sub2 = LinkedList()
-sub2.insert_back(10)
-sub2.insert_back(11)
-
-sub3 = LinkedList()
-sub3.insert_back(12)
-sub3.insert_back(13)
-
-list.nest_list(2, sub1)
-sub1.nest_list(8, sub2)
-list.nest_list(5, sub3)
-
+list.insert_back(7)
+list.insert_back(8)
 list.print()
 print()
-list.flatten()
-list.print()
+list.cycle(3)
+list.floyd_algorithm()
