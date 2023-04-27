@@ -80,6 +80,7 @@ class LinkedList:
             temp.prev = newNode
         else:
             self.head = newNode
+            self.tail = newNode
         self.count += 1
 
     def insert_at(self, data, index):
@@ -94,7 +95,7 @@ class LinkedList:
             else:
                 for i in range(0, index - 1):
                     current = current.next
-
+                # Temp holds the value that will move to the right to make room for the insert
                 temp = current.next
                 current.next = newNode
                 newNode.prev = current
@@ -269,8 +270,8 @@ class LinkedList:
                 current.value = list[index]
                 current = current.prev
 
-        elif 1 <= self.count <= 2:
-            return
+        elif self.count < 2:
+            print('Not enough items in the list to reverse')
         elif self.count == 0:
             print('The list is empty')
 
